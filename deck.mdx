@@ -1,152 +1,215 @@
-import {
-  CodeSurfer,
-  CodeSurferColumns,
-  Step,
-} from "code-surfer";
-import { github, vsDark } from "@code-surfer/themes";
+import { CodeSurfer } from "code-surfer";
+import "prismjs/components/prism-haskell"
+import { themes, Image } from 'mdx-deck'
 
-export const theme = vsDark;
+export const theme = themes.future;
 
-# Hello 👋
-
-You are using [MDX Deck](https://github.com/jxnblk/mdx-deck) and [Code Surfer](https://codesurfer.pomb.us)
+# Down the Haskell Rabbithole
+*and other math adventures*
 
 ---
 
+# DISCLAIMER
+a brief tour from a hobbyist, not an expert...
+
+---
+
+## First Impressions of Haskell
+
 <CodeSurfer>
 
-```js title="This is a title" subtitle="and this a subtitle"
-function lorem(ipsum, dolor = 1) {
-  const sit = ipsum == null ? 0 : ipsum.sit;
-  dolor = sit - amet(dolor);
-  return sit
-    ? consectetur(ipsum, 0, dolor < 0 ? 0 : dolor)
-    : [];
-}
-
-function incididunt(ipsum, ut = 1) {
-  ut = labore.et(amet(ut), 0);
-  const sit = ipsum == null ? 0 : ipsum.sit;
-
-  if (!sit || ut < 1) {
-    return [];
-  }
-
-  let dolore = 0;
-  let magna = 0;
-  const aliqua = new eiusmod(labore.ut(sit / ut));
-
-  while (dolore < sit) {
-    aliqua[magna++] = consectetur(
-      ipsum,
-      dolore,
-      (dolore += ut)
-    );
-  }
-
-  return aliqua;
-}
-```
-
-```js
-function lorem(ipsum, dolor = 1) {
-  const sit = ipsum == null ? 0 : ipsum.sit;
-  dolor = sit - amet(dolor);
-  return sit
-    ? consectetur(ipsum, 0, dolor < 0 ? 0 : dolor)
-    : [];
-}
-
-function adipiscing(...elit) {
-  if (!elit.sit) {
-    return [];
-  }
-
-  const sed = elit[0];
-  return eiusmod.tempor(sed) ? sed : [sed];
-}
-
-function incididunt(ipsum, ut = 1) {
-  ut = labore.et(amet(ut), 0);
-  const sit = ipsum == null ? 0 : ipsum.sit;
-
-  if (!sit || ut < 1) {
-    return [];
-  }
-
-  let dolore = 0;
-  let magna = 0;
-  const aliqua = new eiusmod(labore.ut(sit / ut));
-
-  while (dolore < sit) {
-    aliqua[magna++] = consectetur(
-      ipsum,
-      dolore,
-      (dolore += ut)
-    );
-  }
-
-  return aliqua;
-}
-```
-
-```diff 1[10:14],2[15:19],3[22:27],10:12
-
+```haskell
+main :: IO()
+main = putStrLn "Hello Dathena"
 ```
 
 </CodeSurfer>
 
 ---
 
-<CodeSurferColumns themes={[vsDark, github]}>
+### The Gotchas
 
-<Step>
+Everything is pure. immutable
 
-```js
-const magna = aliqua => aliqua.ut((enim, ad) => enim, 0);
-```
-
-```js
-const minim = (ad, enim) => dolore.magna(ad / enim);
-```
-
-</Step>
-
-<Step>
-
-```js
-const lorem = (ipsum, dolor, sit) => {
-  const amet = dolor - ipsum;
-  return consectetur.adipiscing(
-    {
-      elit: sed.eiusmod(sit - dolor) / amet + 2,
-    },
-    (tempor, incididunt) => ipsum + amet * incididunt
-  );
-};
-
-const magna = aliqua => aliqua.ut((enim, ad) => enim, 0);
-```
-
-```js
-const minim = (ad, enim) => dolore.magna(ad / enim);
-
-const sed = (eiusmod, tempor, incididunt) => {
-  const ut = tempor - eiusmod;
-  return labore.et(
-    {
-      amet: dolore.magna(incididunt - tempor) / ut + 2,
-    },
-    (aliqua, elit) => eiusmod + ut * elit
-  );
-};
-```
-
-</Step>
-
-</CodeSurferColumns>
+*why are variables weird? I cant mutate variables*
 
 ---
 
-docs:  
-[codesurfer.pomb.us](https://codesurfer.pomb.us)
+### The Gotchas
+
+No imperative and procedural code
+
+how do i iterate? theres no loops
+
+---
+
+### The Gotchas
+
+Side effects are wrapped in monads. The only exception from purity.
+
+*how do i print debug statements? whats an `IO` monad?*
+
+---
+
+### Nonogram Solver
+
+<img src="https://i.imgur.com/UOEciP1.png" alt="nonogram example" width="30%"/>
+
+---
+
+### What I've learnt
+
+* Data flow rather (functional) vs Message Passing (OOP)
+* think in terms of recursions
+
+---
+
+### Example in code
+
+<CodeSurfer>
+
+```haskell 5[5:9],6[9:11],7[9:14],8[9:13],9[13:15],10[13:15],11[13:17],12[17:19],13[17:19],14
+genseq :: Int -> [Int] -> [(Range,[Range])] -> [[HRT]]
+genseq _ [] par = if (foldl (+) 0 $ map (\(_,rs)-> length rs) par) == 0 then [[]] else []
+-- if no hints; and no O ranges blank is an ordering
+genseq b h par =
+    foldl (++) [] $                                     -- collate all possible O pull
+        map (\x -> ordPart $ zip x par) $               -- each order's possible O pull
+        filter (validOW ps) $                           -- filter violate X / cant fit
+        foldl (++) [] $                                 -- collate possible ordering
+            map (\x -> ordhg [] (length x) x pc) $      -- divpts hint groups in partitions; order
+            map (divhin 0 h) $                          -- hints in groups defined by division points
+            foldl (++) [] $                             -- collate list of division points
+                map (\x -> snd(divpts (length h) x)) $  -- divpts division points
+                map (\x -> [1..x]) $                    -- initial group division point for hint list
+                [0..((min pc (length h))-1)]            -- division point index
+    where
+        ps = map (fst) par
+        pc = (length ps)
+```
+
+</CodeSurfer>
+
+---
+
+### DEMO
+
+---
+
+### New Powers
+
+Recursive Types, Parametric Polymorphism, Algebraic Data Types
+
+<CodeSurfer>
+
+```haskell
+data List a = Empty | Cons a (List a)
+
+example :: List Int
+example = Cons 1 (Cons 2 (Cons 3 Empty))
+```
+
+</CodeSurfer>
+
+---
+
+### New Powers
+
+Currying and first class functions
+
+
+<CodeSurfer>
+
+```haskell
+myFunc :: a -> a -> a
+myFunc a b = a + b
+
+fiveAdder = myFunc 5
+
+example = fiveAdder 3
+-- 8
+```
+
+</CodeSurfer>
+
+---
+
+### New Powers
+
+Pattern matching
+
+
+<CodeSurfer>
+
+```haskell
+f [] = 34
+f [x] = x + x
+f (a:b:xs) = a * b
+
+example1 = f []       -- 34
+example2 = f [1]      -- 2
+example3 = f [3,4]    -- 12
+example4 = f [1,2,3]  -- 2
+```
+
+</CodeSurfer>
+
+---
+### New Powers
+
+Lazy evaluation; we can have infinite structures
+
+<CodeSurfer>
+
+```haskell
+let fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
+let example = take 10 fibs
+-- [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+```
+
+</CodeSurfer>
+
+---
+
+### So I got confident in haskell but theres more
+* Lenses / Optics library
+* FRP paradigm with arrows
+* Math jargons used
+
+---
+
+### A monad is just a monoid in the category of endofunctors
+*whats the problem?*
+
+---
+
+### Category Theory
+
+---
+
+### Segue to Set Theory
+
+* Numbers - Integers, Rationals, Reals, Complex
+* Order (relations) - equivalence classes, posets, lattices, ...
+* Algebraic (functions) - Groups, Monoids, Magma, Rings, Vector Space, ...
+* Subset - Topology, Sigma Algebra, Borel Algebra, ...
+
+Can all mathematical structure be organized hierarchically? (e.g. construction from sets)
+
+---
+
+### Segue to Foundations of Mathematics
+
+Abstract Algebra -> Universal Algebra -> ZFC Axioms -> Logicism
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Young_frege.jpg/220px-Young_frege.jpg"
+alt="Gottlob Frege"
+/>
+
+---
+
+### Segue to Foundations of Mathematics
+
+<img src="https://www.daviddarling.info/images/Hilbert.jpg"
+alt="David Hilbert"
+/>
