@@ -1,6 +1,6 @@
 import { CodeSurfer } from "code-surfer";
 import "prismjs/components/prism-haskell"
-import { themes, Image } from 'mdx-deck'
+import { themes } from 'mdx-deck'
 
 export const theme = themes.future;
 
@@ -39,7 +39,7 @@ Everything is pure. immutable
 
 No imperative and procedural code
 
-how do i iterate? theres no loops
+*how do i iterate? theres no loops*
 
 ---
 
@@ -51,7 +51,7 @@ Side effects are wrapped in monads. The only exception from purity.
 
 ---
 
-### Nonogram Solver
+### Learning Project: Nonogram Solver
 
 <img src="https://i.imgur.com/UOEciP1.png" alt="nonogram example" width="30%"/>
 
@@ -98,23 +98,6 @@ genseq b h par =
 
 ### New Powers
 
-Recursive Types, Parametric Polymorphism, Algebraic Data Types
-
-<CodeSurfer>
-
-```haskell
-data List a = Empty | Cons a (List a)
-
-example :: List Int
-example = Cons 1 (Cons 2 (Cons 3 Empty))
-```
-
-</CodeSurfer>
-
----
-
-### New Powers
-
 Currying and first class functions
 
 
@@ -128,6 +111,23 @@ fiveAdder = myFunc 5
 
 example = fiveAdder 3
 -- 8
+```
+
+</CodeSurfer>
+
+---
+
+### New Powers
+
+Recursive Types, Parametric Polymorphism, Algebraic Data Types
+
+<CodeSurfer>
+
+```haskell
+data List a = Empty | Cons a (List a)
+
+example :: List Int
+example = Cons 1 (Cons 2 (Cons 3 Empty))
 ```
 
 </CodeSurfer>
@@ -185,6 +185,12 @@ let example = take 10 fibs
 
 ## Category Theory
 
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Category_SVG.svg/1920px-Category_SVG.svg.png"
+alt="category theory"
+style="background-color: white"
+width="30%"
+/>
+
 ---
 
 ### Segue to Set Theory
@@ -213,6 +219,8 @@ alt="Gottlob Frege"
 <img src="https://www.daviddarling.info/images/Hilbert.jpg"
 alt="David Hilbert"
 />
+
+The Hilbert Program aims to axiomatize all of mathematics into a single system
 
 ---
 
@@ -284,23 +292,36 @@ Propositions are types
 alt="Curry howard" />
 
 ---
+import { Appear } from 'mdx-deck'
 
 ### Theorem Provers
 
-<img src="https://i.imgur.com/cnyssm3.png"
-alt="coq"
-width="10%"
-/>
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Agda%27s_official_logo.svg/2880px-Agda%27s_official_logo.svg.png"
-alt="agda"
-width="30%"
-/>
-
-### NuPRL
+<div style="display: flex; flex-direction: column; text-align: center">
+<Appear>
+  <div style="display: flex; align-items: center">
+    <img src="https://i.imgur.com/cnyssm3.png"
+    alt="coq"
+    width="10%"
+    />
+    Calculus of Construction
+  </div>
+  <div style="display: flex; align-items: center">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Agda%27s_official_logo.svg/2880px-Agda%27s_official_logo.svg.png"
+    alt="agda"
+    width="30%"
+    />
+    dependent type theory
+  </div>
+  <div style="display: flex; align-items: center">
+    <span style="font-size: 2em">NUPRL</span>
+    intuitionistic type theory
+  </div>
+</Appear>
+</div>
 
 ---
 
-### OPLSS (oregon programming languages summer school)
+### OPLSS 2012 (oregon programming languages summer school)
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/ev7AYsLljxk?start=865" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
